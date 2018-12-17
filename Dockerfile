@@ -8,6 +8,9 @@ ARG         ELASTIC_KEY="https://artifacts.elastic.co/GPG-KEY-elasticsearch"
 ARG         ELASTIC_REPO="https://artifacts.elastic.co/packages/5.x/apt"
 ARG         GRAYLOG_REPO_PACKAGE="https://packages.graylog2.org/repo/packages/graylog-2.4-repository_latest.deb"
 
+ENV         ELASTIC_MAX_RAM 512m
+ENV         GRAYLOG_MAX_RAM 512m
+
 # Set a default conf for apt install
 RUN         echo 'apt::install-recommends "false";' > /etc/apt/apt.conf.d/no-install-recommends
 
@@ -17,7 +20,7 @@ RUN         mkdir -p /usr/share/man/man1
 # Install MongoDB + ElasticSearch + Graylog
 RUN         apt update && \
             # Install a few required packages
-            apt install -y apt-transport-https curl dirmngr gnupg openjdk-8-jre-headless uuid-runtime pwgen && \
+            apt install -y apt-transport-https curl dirmngr gnupg openjdk-8-jre-headless procps pwgen uuid-runtime && \
             # Setup Repo MongoDB
             apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv ${MONGODB_KEY} && \
             echo "deb ${MONGODB_REPO} main" > /etc/apt/sources.list.d/mongodb.list && \
@@ -36,8 +39,8 @@ RUN         apt update && \
             rm -rf /var/lib/apt/lists/* /usr/share/man/* /usr/share/doc/* /var/cache/* /var/log/*
 
 # Prepare MongoDB
-RUN         mkdir -p /data/db /var/log/mongodb && \
-            chown -R mongodb:mongodb /data /var/log/mongodb
+RUN         mkdir -p /data/mongodb /var/log/mongodb && \
+            chown -R mongodb:mongodb /data/mongodb /var/log/mongodb
 
 # Prepare GrayLog
 RUN         mkdir -p /var/log/graylog-server && \
