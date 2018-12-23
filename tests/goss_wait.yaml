@@ -1,13 +1,17 @@
 port:
   tcp:27017:
     listening: true
+    timeout: 15000
   tcp:9200:
     listening: true
+    timeout: 15000
   tcp:9000:
     listening: true
+    timeout: 15000
   tcp:9001:
     listening: true
+    timeout: 15000
 http:
   http://127.0.0.1:9000/:
     status: 200
-    timeout: 15000
+    timeout: 30000
