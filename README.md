@@ -16,7 +16,21 @@ environment.
 
 ## Run Docker image
 As the logging system of docker works directly via the host, you need to expose
-one of the logging port (for example gelf or rsyslog). 
+one of the logging port (for example gelf or rsyslog). See below.
+
+Once launched, to access graylog you need to go to [http://localhost:9000](http://localhost:9000/system/inputs)
+and log-in with `admin` / `admin`. Then go to [System/Input => Inputs](http://localhost:9000/system/inputs), 
+select `GELF UDP` in the dropdown list then `Launch new Input`. 
+Check `global`, and anything for the title. You are ready to go.
+See [Official Documentation](http://docs.graylog.org/en/2.1/pages/getting_started/config_input.html).
+
+To do that but with curl : 
+```bash
+curl 'http://127.0.0.1:9001/api/system/inputs' \
+    -H 'Authorization: Basic YTdmMGZjNGMtOTU4YS00YTEwLWE1ZjgtNDRjMjUyZTE2MTBmOnNlc3Npb24=' \
+    -H 'Content-Type: application/json' \
+    --data-binary '{"title":"Global","type":"org.graylog2.inputs.gelf.udp.GELFUDPInput","configuration":{"bind_address":"0.0.0.0","port":12201,"recv_buffer_size":262144,"override_source":null,"decompress_size_limit":8388608},"global":true}'
+```  
 
 ## Environment variables
 Two variables have been created (`ELASTIC_MAX_RAM` (default `1024m`) 
