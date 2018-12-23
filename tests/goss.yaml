@@ -1,0 +1,70 @@
+file:
+  /data/elasticsearch:
+    exists: true
+    owner: elasticsearch
+    group: elasticsearch
+    filetype: directory
+    contains: []
+  /data/mongodb:
+    exists: true
+    owner: mongodb
+    group: mongodb
+    filetype: directory
+    contains: []
+  /var/log/elasticsearch:
+    exists: true
+    owner: elasticsearch
+    group: elasticsearch
+    filetype: directory
+    contains: []
+  /var/log/graylog-server:
+    exists: true
+    owner: graylog
+    group: graylog
+    filetype: directory
+    contains: []
+  /var/log/mongodb:
+    exists: true
+    owner: mongodb
+    group: mongodb
+    filetype: directory
+    contains: []
+
+package:
+  elasticsearch:
+    installed: true
+    versions:
+      contain-element:
+        match-regexp: "5.6.+"
+  graylog-server:
+    installed: true
+    versions:
+      contain-element:
+        match-regexp: "2.+"
+  mongodb-org-server:
+    installed: true
+    versions:
+      contain-element:
+        match-regexp: "3.6.+"
+  openjdk-8-jre-headless:
+    installed: true
+    versions:
+      contain-element:
+        match-regexp: "8u.+"
+
+process:
+  java:
+    running: true
+  mongod:
+    running: true
+
+http:
+  http://127.0.0.1:9000/:
+    status: 200
+    timeout: 2000
+  http://127.0.0.1:9001/api:
+    status: 200
+    timeout: 3000
+  http://127.0.0.1:9200:
+    status: 200
+    timeout: 1000

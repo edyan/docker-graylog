@@ -8,7 +8,7 @@ ARG         ELASTIC_KEY="https://artifacts.elastic.co/GPG-KEY-elasticsearch"
 ARG         ELASTIC_REPO="https://artifacts.elastic.co/packages/5.x/apt"
 ARG         GRAYLOG_REPO_PACKAGE="https://packages.graylog2.org/repo/packages/graylog-2.4-repository_latest.deb"
 
-ENV         ELASTIC_MAX_RAM 512m
+ENV         ELASTIC_MAX_RAM 1024m
 ENV         GRAYLOG_MAX_RAM 512m
 
 # Set a default conf for apt install

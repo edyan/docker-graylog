@@ -1,31 +1,3 @@
-# Graylog docker image
-[![Build Status](https://travis-ci.com/edyan/docker-graylog.svg?branch=master)](https://travis-ci.com/edyan/docker-graylog)
-[![Docker Pulls](https://img.shields.io/docker/pulls/edyan/graylog.svg)](https://hub.docker.com/r/edyan/graylog/)
-
-
-Docker Hub: https://hub.docker.com/r/edyan/graylog
-
-Docker container that runs [graylog](https://www.graylog.org). It's an alternative 
-to the official image as it embeds all required components (MongoDB and Elastic) 
-and tries to be as light and simple as possible.  
-
-It's made for development purposes, and will perfectly fit with a docker-compose 
-environment. 
-
-**Be careful, it takes some time to load (Java!)**
-
-## Run Docker image
-As the logging system of docker works directly via the host, you need to expose
-one of the logging port (for example gelf or rsyslog). 
-
-## Environment variables
-Two variables have been created (`ELASTIC_MAX_RAM` (default `1024m`) 
-and `GRAYLOG_MAX_RAM` (default `512m`). 
-
-## Docker Compose example
-See directory `examples/`.
-
-```yaml
 version: '3.3'
 
 services:
@@ -46,7 +18,7 @@ services:
       ELASTIC_MAX_RAM: 1024m
       GRAYLOG_MAX_RAM: 512m
     volumes:
-    - ./data/graylog/mongodb:/data/mongdb
+    - ./data/graylog/mongodb:/data/mongodb
     - ./data/graylog/elasticsearch:/data/elasticsearch
     logging:
       driver: gelf
@@ -85,5 +57,3 @@ services:
       driver: gelf
       options:
         gelf-address: "udp://127.0.0.1:12201"
-```
-

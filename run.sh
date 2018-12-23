@@ -15,10 +15,15 @@ sed -i "s|-Xmx[0-9gm]* |-Xmx${GRAYLOG_MAX_RAM} |g" /etc/default/graylog-server
 /etc/init.d/graylog-server start
 
 # Start Elastic
+# Make sure we have the right permissions
+chown -R elasticsearch:elasticsearch /data/elasticsearch
+# Change config
 sed -i "s|^-Xms.*|-Xms${ELASTIC_MAX_RAM}|g" /etc/elasticsearch/jvm.options
 sed -i "s|^-Xmx.*|-Xmx${ELASTIC_MAX_RAM}|g" /etc/elasticsearch/jvm.options
 /etc/init.d/elasticsearch start
 
 # Start mongo in foreground
 # That's a trick, but that image is for dev only ;)
+chown -R mongodb:mongodb /data/mongodb
 /usr/bin/mongod --smallfiles --dbpath /data/mongodb
+
