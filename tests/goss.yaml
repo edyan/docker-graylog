@@ -71,10 +71,10 @@ port:
 http:
   http://127.0.0.1:9000/:
     status: 200
-    timeout: 2000
+    timeout: 10000
   http://127.0.0.1:9001/api:
     status: 200
-    timeout: 3000
+    timeout: 10000
   http://127.0.0.1:9200:
     status: 200
-    timeout: 1000
+    timeout: 10000
