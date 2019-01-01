@@ -1,4 +1,4 @@
-http:
-  http://127.0.0.1:9000/:
-    status: 200
-    timeout: 60000
+addr:
+  tcp://localhost:9000:
+    reachable: true
+    timeout: 20000
