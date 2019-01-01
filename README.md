@@ -33,11 +33,12 @@ curl 'http://127.0.0.1:9001/api/system/inputs' \
 ```  
 
 ## Environment variables
-Two variables have been created (`ELASTIC_MAX_RAM` (default `1024m`) 
-and `GRAYLOG_MAX_RAM` (default `512m`). 
+Two variables have been created : 
+* `ELASTIC_MAX_RAM` (default: `1024m`) 
+* `GRAYLOG_MAX_RAM` (default: `512m`). 
 
 ## Docker Compose example
-See directory `examples/`.
+See directory `examples/` that contains the following configuration :
 
 ```yaml
 version: '3.3'
@@ -100,4 +101,3 @@ services:
       options:
         gelf-address: "udp://127.0.0.1:12201"
 ```
-
