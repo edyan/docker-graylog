@@ -55,7 +55,7 @@ RUN         mkdir -p /data/elasticsearch /var/log/elasticsearch
 RUN         chown -R elasticsearch:elasticsearch /data/elasticsearch /var/log/elasticsearch
 
 # Finally
-EXPOSE      9000
+EXPOSE      9000 9001 9200 27017
 COPY        run.sh /run.sh
 RUN         chmod +x /run.sh
 
