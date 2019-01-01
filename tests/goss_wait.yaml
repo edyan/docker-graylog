@@ -1,4 +1,0 @@
-addr:
-  tcp://localhost:9000:
-    reachable: true
-    timeout: 20000
