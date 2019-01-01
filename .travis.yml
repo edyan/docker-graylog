@@ -11,4 +11,4 @@ script:
   #
   # Do tests
   - curl -fsSL https://goss.rocks/install | sudo sh
-  - exec test.sh
+  - ./test.sh
