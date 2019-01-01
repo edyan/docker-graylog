@@ -1,6 +1,5 @@
 sudo: required
 
-env: [GOSS_FILES_STRATEGY=cp, GOSS_SLEEP=15]
 language: shell
 services: [docker]
 script:
@@ -10,6 +9,6 @@ script:
   # - sudo apt-get update
   # - sudo apt-get install -y --no-install-recommends curl
   #
-  # Continue
+  # Do tests
   - curl -fsSL https://goss.rocks/install | sudo sh
-  - ./test.sh
+  - exec test.sh
