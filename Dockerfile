@@ -41,6 +41,7 @@ RUN         apt update && \
 # Prepare MongoDB
 RUN         mkdir -p /data/mongodb /var/log/mongodb && \
             chown -R mongodb:mongodb /data/mongodb /var/log/mongodb
+VOLUME      /data/mongodb
 
 # Prepare GrayLog
 RUN         mkdir -p /var/log/graylog-server && \
@@ -49,10 +50,11 @@ RUN         GRAYLOG_PASSWORD=$(pwgen -N 1 -s 96) && \
             sed -i "s|.*password_secret.*=.*|password_secret = ${GRAYLOG_PASSWORD}|g" /etc/graylog/server/server.conf
 
 # Prepare Elastic
-RUN         sed -i 's|.*path.data:.*|path.data: /data/elasticsearch|g' /etc/elasticsearch/elasticsearch.yml
-RUN         sed -i 's|.*path.logs:.*|path.logs: /var/log/elasticsearch|g' /etc/elasticsearch/elasticsearch.yml
+# Limit memory usage and set standard path to mount some dirs
+RUN         echo "path.data: /data/elasticsearch\npath.logs: /var/log/elasticsearch\ndiscovery.type: single-node"  > /etc/elasticsearch/elasticsearch.yml
 RUN         mkdir -p /data/elasticsearch /var/log/elasticsearch
 RUN         chown -R elasticsearch:elasticsearch /data/elasticsearch /var/log/elasticsearch
+VOLUME      /data/elasticsearch
 
 # Finally
 EXPOSE      9000 9001 9200 27017
