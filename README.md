@@ -24,12 +24,28 @@ select `GELF UDP` in the dropdown list then `Launch new Input`.
 Check `global`, and anything for the title. You are ready to go.
 See [Official Documentation](http://docs.graylog.org/en/2.1/pages/getting_started/config_input.html).
 
-To do that but with curl : 
+To do that but with curl :
+
+First get a token :  
 ```bash
-curl 'http://127.0.0.1:9001/api/system/inputs' \
-    -H 'Authorization: Basic YTdmMGZjNGMtOTU4YS00YTEwLWE1ZjgtNDRjMjUyZTE2MTBmOnNlc3Npb24=' \
-    -H 'Content-Type: application/json' \
-    --data-binary '{"title":"Global","type":"org.graylog2.inputs.gelf.udp.GELFUDPInput","configuration":{"bind_address":"0.0.0.0","port":12201,"recv_buffer_size":262144,"override_source":null,"decompress_size_limit":8388608},"global":true}'
+$ export GL_TOKEN_URL='http://127.0.0.1:9001/api/users/admin/tokens/docker?pretty=true'
+$ curl -u admin:admin -H 'Accept: application/json' -H 'X-Requested-By: cli' -X POST $GL_TOKEN_URL 
+```
+Returns something like :
+```json   
+{
+  "name" : "docker",
+  "token" : "mm1ri8u0qcifrbmtcbcv6clkg2a9jkg3rlhfg5ogc2eihmhu40n",
+  "last_access" : "1970-01-01T00:00:00.000Z"
+}
+```                                                                            
+
+Note the token then : 
+```bash
+$ export TOKEN='mm1ri8u0qcifrbmtcbcv6clkg2a9jkg3rlhfg5ogc2eihmhu40n'
+$ export GL_INPUTS_URL='http://127.0.0.1:9001/api/system/inputs'
+$ curl -u ${TOKEN}:token -H 'Content-Type: application/json' -X POST $GL_INPUTS_URL \
+       --data-binary '{"title":"Global","type":"org.graylog2.inputs.gelf.udp.GELFUDPInput","configuration":{"bind_address":"0.0.0.0","port":12201,"recv_buffer_size":262144,"override_source":null,"decompress_size_limit":8388608},"global":true}'
 ```  
 
 ## Environment variables
@@ -38,7 +54,7 @@ Two variables have been created :
 * `GRAYLOG_MAX_RAM` (default: `512m`). 
 
 ## Docker Compose example
-See directory `examples/` that contains the following configuration :
+See directory `examples/`, or try : 
 
 ```yaml
 version: '3.3'
@@ -46,23 +62,12 @@ version: '3.3'
 services:
   graylog:
     ports:
-    # Graylog web interface and REST API. Required
-    # Login and password are admin / admin
-    - 9000:9000/tcp
-    - 9001:9001/tcp
-    # Syslog TCP and UDP if you use that logging driver
-    - 514:514/tcp
-    - 514:514/udp
-    # GELF TCP and UDP if you use that logging driver
-    - 12201:12201/tcp
-    - 12201:12201/udp
+      # Graylog web interface and REST API. Required (login / pass : admin / admin)
+      - 9000:9000/tcp
+      - 9001:9001/tcp
+      # GELF TCP and UDP if you use that logging driver
+      - 12201:12201/udp
     image: edyan/graylog:latest
-    environment:
-      ELASTIC_MAX_RAM: 1024m
-      GRAYLOG_MAX_RAM: 512m
-    volumes:
-    - ./data/graylog/mongodb:/data/mongdb
-    - ./data/graylog/elasticsearch:/data/elasticsearch
     logging:
       driver: gelf
       options:
@@ -70,7 +75,7 @@ services:
 
   db:
     depends_on:
-    - graylog
+      - graylog
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -78,7 +83,7 @@ services:
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
     volumes:
-    - ./data/mysql:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
     logging:
       driver: gelf
       options:
@@ -89,13 +94,13 @@ services:
     - db
     image: wordpress:latest
     ports:
-    - "8000:80"
+      - "8000:80"
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
     volumes:
-    - ./data/wordpress:/var/www/html/wp-content
+      - ./data/wordpress:/var/www/html/wp-content
     logging:
       driver: gelf
       options:
